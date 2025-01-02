@@ -1,9 +1,9 @@
-FROM rockylinux/rockylinux:9-ubi-init
+FROM rockylinux/rockylinux:9-ubi
 LABEL MAINTAINER="wujidadi@gmail.com"
 
-ARG vim_tag=v9.1.0848
+ARG vim_tag=v9.1.0983
 ARG nano_great_version=8
-ARG nano_version=8.2
+ARG nano_version=8.3
 
 ENV LANG=en_US.UTF-8 \
     LANGUAGE=en_US:en \

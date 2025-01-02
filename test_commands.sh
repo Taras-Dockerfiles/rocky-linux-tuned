@@ -6,17 +6,19 @@ docker buildx rm multiarch
 docker buildx create --name multiarch --use
 
 # Build the Docker image
-docker buildx build --no-cache --progress=plain --push --platform linux/amd64,linux/arm64/v8 --rm -t wujidadi/rocky-linux-tuned:3.5 -t wujidadi/rocky-linux-tuned:latest . 2>&1 | tee $D/docker-build-rlt-3.5.log
+docker buildx build --no-cache --progress=plain --push --platform linux/amd64,linux/arm64/v8 --rm -t wujidadi/rocky-linux-tuned:3.6 -t wujidadi/rocky-linux-tuned:latest . 2>&1 | tee $D/docker-build-rlt-3.6.log
 
 # Create testing container
-docker run -d -p 50000:80 -it --name Test wujidadi/rocky-linux-tuned:3.5
+docker run -d -p 50000:80 -it --name Test wujidadi/rocky-linux-tuned:3.6
 
 # Test the container outside itself by each command
+docker exec -it Test cat /etc/os-release | grep VERSION
 docker exec -it Test vim --version | grep 'Included patches'
 docker exec -it Test nano -V | grep 'GNU nano, version'
 
 # Test the container outside itself by one command
-docker exec -it Test bash -c "vim --version | grep 'Included patches'; \
+docker exec -it Test bash -c "cat /etc/os-release | grep VERSION; \
+vim --version | grep 'Included patches'; \
 nano -V | grep 'GNU nano, version'"
 
 # Delete the testing containter finally
