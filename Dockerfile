@@ -1,7 +1,7 @@
 FROM rockylinux/rockylinux:9-ubi
 LABEL MAINTAINER="wujidadi@gmail.com"
 
-ARG vim_tag=v9.1.1054
+ARG vim_tag=v9.1.1077
 ARG nano_great_version=8
 ARG nano_version=8.3
 
@@ -26,7 +26,7 @@ RUN echo '' && \
     echo 'Installing common packages ...' && \
     echo '================================' && \
     echo '' && \
-    dnf install -y epel-release dnf-utils util-linux util-linux-user && \
+    dnf install -y epel-release dnf-utils util-linux util-linux-user glibc-common glibc-langpack-en && \
     dnf install -y --allowerasing sudo bash-completion gcc openssl xz \
     net-tools iputils nmap lsof telnet cronie rsyslog expect zip unzip p7zip p7zip-plugins curl wget \
     git zsh ca-certificates less tmux chrony gpg gpgme gnupg2 && \
