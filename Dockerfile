@@ -1,7 +1,7 @@
 FROM rockylinux/rockylinux:9-ubi
 LABEL MAINTAINER="wujidadi@gmail.com"
 
-ARG vim_tag=v9.1.1077
+ARG vim_tag=v9.1.1202
 ARG nano_great_version=8
 ARG nano_version=8.3
 
