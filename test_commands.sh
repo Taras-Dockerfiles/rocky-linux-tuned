@@ -6,10 +6,10 @@ docker buildx rm multiarch
 docker buildx create --name multiarch --use
 
 # Build the Docker image
-docker buildx build --no-cache --progress=plain --push --platform linux/amd64,linux/arm64/v8 --rm -t wujidadi/rocky-linux-tuned:20250315 -t wujidadi/rocky-linux-tuned:latest . 2>&1 | tee $D/docker-build-rlt-20250315.log
+docker buildx build --no-cache --progress=plain --push --platform linux/amd64,linux/arm64/v8 --rm -t wujidadi/rocky-linux-tuned:20250511 -t wujidadi/rocky-linux-tuned:latest . 2>&1 | tee $D/docker-build-rlt-20250511.log
 
 # Create testing container
-docker run -d -p 50000:80 -it --name Test wujidadi/rocky-linux-tuned:20250315
+docker run -d -p 50000:80 -it --name Test wujidadi/rocky-linux-tuned:20250511
 
 # Test the container outside itself by each command
 docker exec -it Test cat /etc/os-release | grep VERSION
