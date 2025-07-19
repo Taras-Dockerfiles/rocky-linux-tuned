@@ -1,9 +1,14 @@
 FROM rockylinux/rockylinux:9.6
 LABEL MAINTAINER="wujidadi@gmail.com"
 
-ARG vim_tag=v9.1.1538
+ARG git_version=2.50.1
+ARG vim_version=9.1.1566
 ARG nano_great_version=8
 ARG nano_version=8.5
+
+ARG root_pswd
+ARG user_name=rocky
+ARG user_pswd
 
 ENV LANG=en_US.UTF-8 \
     LANGUAGE=en_US:en \
@@ -28,21 +33,21 @@ RUN echo '' && \
     echo '' && \
     dnf install -y epel-release dnf-utils util-linux util-linux-user glibc-common glibc-langpack-en && \
     dnf install -y --allowerasing sudo bash-completion gcc openssl xz \
-    net-tools iputils nmap lsof telnet cronie rsyslog expect zip unzip p7zip p7zip-plugins curl wget \
-    git zsh ca-certificates less tmux chrony gpg gpgme gnupg2 && \
+    net-tools iputils nmap lsof telnet cronie rsyslog expect zip unzip p7zip p7zip-plugins curl wget tmux \
+    tmux zsh ca-certificates less tmux chrony gpg gpgme gnupg2 && \
     echo '' && \
     echo '================================' && \
     echo 'Installing Development Tools ...' && \
     echo '================================' && \
     echo '' && \
     dnf groupinstall -y "Development Tools" && \
-    dnf install -y pcre pcre-devel zlib zlib-devel openssl-devel && \
+    dnf install -y pcre pcre-devel zlib zlib-devel openssl-devel libcurl-devel expat-devel tcl-devel gettext-devel && \
     echo '' && \
     echo '================================' && \
     echo 'Setting root ...' && \
     echo '================================' && \
     echo '' && \
-    echo 'root:RootUser' | chpasswd && \
+    echo "root:${root_pswd}" | chpasswd && \
     echo '' && \
     echo '==========================================' && \
     echo 'Installing ncurses and S-Lang packages ...' && \
@@ -51,11 +56,20 @@ RUN echo '' && \
     dnf install -y ncurses-devel slang-devel && \
     echo '' && \
     echo '================================' && \
+    echo 'Installing newest Git ...' && \
+    echo '================================' && \
+    echo '' && \
+    curl -L https://github.com/git/git/archive/refs/tags/v${git_version}.tar.gz -o /git.tar.gz && \
+    tar xvf /git.tar.gz -C / && cd /git-${git_version} && \
+    make prefix=/usr all && make prefix=/usr install && \
+    cd / && rm -rf /git-${git_version} /git.tar.gz && \
+    echo '' && \
+    echo '================================' && \
     echo 'Installing newest Vim ...' && \
     echo '================================' && \
     echo '' && \
     cd / && \
-    git clone -b ${vim_tag} https://github.com/vim/vim.git vim && \
+    git clone -b v${vim_version} https://github.com/vim/vim.git vim && \
     cd vim/src && \
     make && make install && \
     cd / && rm -rf vim && \
@@ -89,6 +103,7 @@ RUN echo '' && \
     curl -L https://raw.github.com/Wujidadi/Ubuntu-RC/main/root.zshrc -o /root/.zshrc && \
     curl -L https://raw.github.com/Wujidadi/Ubuntu-RC/main/myzshtheme.zsh-theme -o /root/.oh-my-zsh/themes/myzshtheme.zsh-theme && \
     curl -L https://raw.github.com/Wujidadi/Ubuntu-RC/main/myrootzshtheme.zsh-theme -o /root/.oh-my-zsh/themes/myrootzshtheme.zsh-theme && \
+    sed -i 's|^#\s*export PATH=\$HOME/bin:/usr/local/bin:\$PATH|export PATH=\$HOME/bin:/usr/local/bin:/usr/local/sbin:\$PATH|g' /root/.zshrc && \
     echo '' && \
     echo '=====================================' && \
     echo 'Changing the default shell to Zsh ...' && \
@@ -104,7 +119,48 @@ RUN echo '' && \
     git config --global core.pager 'less --raw-control-chars' && \
     echo '' && \
     echo '================================' && \
+    echo 'Creating non-root user ...' && \
+    echo '================================' && \
+    echo '' && \
+    useradd -m -s /bin/zsh -u 1000 ${user_name} && \
+    echo "${user_name}:${user_pswd}" | chpasswd && \
+    usermod -aG wheel ${user_name} && \
+    echo '%wheel ALL=(ALL) NOPASSWD:ALL' > /etc/sudoers.d/${user_name} && \
+    chmod 0440 /etc/sudoers.d/${user_name} && \
+    cp /root/.nanorc /home/${user_name}/.nanorc && \
+    chown -R ${user_name}:${user_name} /home/${user_name} && \
+    echo ''
+
+# Switch to non-root user
+USER ${user_name}
+RUN echo '=========================================' && \
+    echo 'Installing Oh My Zsh to non-root user ...' && \
+    echo '=========================================' && \
+    echo '' && \
+    echo Y | sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" && \
+    curl -L https://raw.github.com/Wujidadi/Ubuntu-RC/main/home.bashrc -o /home/${user_name}/.bashrc && \
+    curl -L https://raw.github.com/Wujidadi/Ubuntu-RC/main/home.vimrc -o /home/${user_name}/.vimrc && \
+    curl -L https://raw.github.com/Wujidadi/Ubuntu-RC/main/home.zshrc -o /home/${user_name}/.zshrc && \
+    sed -i "s|/home/user/.oh-my-zsh|/home/${user_name}/.oh-my-zsh|g" /home/${user_name}/.zshrc && \
+    curl -L https://raw.github.com/Wujidadi/Ubuntu-RC/main/myzshtheme.zsh-theme -o /home/${user_name}/.oh-my-zsh/themes/myzshtheme.zsh-theme && \
+    curl -L https://raw.github.com/Wujidadi/Ubuntu-RC/main/myrootzshtheme.zsh-theme -o /home/${user_name}/.oh-my-zsh/themes/myrootzshtheme.zsh-theme && \
+    echo '' && \
+    echo '======================================================' && \
+    echo 'Changing the default shell of non-root user to Zsh ...' && \
+    echo '======================================================' && \
+    echo '' && \
+    /bin/bash -c "touch /home/${user_name}/.oh-my-zsh/cache/{.zsh-update,grep-alias}" && \
+    echo '' && \
+    echo '========================================================================================' && \
+    echo "Non-root user: Setting Git's default pager to less for displaying unicode characters ..." && \
+    echo '========================================================================================' && \
+    echo '' && \
+    /bin/bash -c "git config --global core.pager 'less --raw-control-chars'" && \
+    echo '' && \
+    echo '================================' && \
     echo 'Image building finishes' && \
     echo '================================'
+
+WORKDIR /home/${user_name}
 
 CMD [ "/bin/zsh", "-l" ]

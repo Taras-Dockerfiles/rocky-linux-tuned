@@ -1,0 +1,17 @@
+#!/bin/bash
+
+source ./.env
+
+docker buildx build \
+  --no-cache \
+  --progress=plain \
+  --push \
+  --platform linux/amd64,linux/arm64/v8 \
+  --rm \
+  --attest type=sbom,generator=docker/scout-sbom-indexer:latest \
+  --attest type=provenance,mode=max \
+  --build-arg root_pswd=$ROOT_SECRET \
+  --build-arg user_pswd=$USER_SECRET \
+  -t $IMAGE:$TAG \
+  -t $IMAGE:latest \
+  . 2>&1 | tee $D/docker-build-rlt-$TAG.log

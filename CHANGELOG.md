@@ -1,5 +1,19 @@
 # Change Log
 
+## 20250720 (2025-07-20)
+
+* OS: **Rocky Linux 9.6 (Blue Onyx)**
+* Main software versions:
+  - **Git v2.50.1**
+  - **Vim v9.1.1566**
+  - **GNU Nano 8.5**
+* Improve Docker Scout health score:
+  - Add non-root user
+  - Add SBOM and Provenance options to build command and extract it into independent `buildx` script
+  - Compile `git` from source to avoid possible "Fixable critical or high vulnerabilities" compliance issues
+* Add independent `test` script for image testing
+* Extract shared arguments from `buildx` and `test` scripts into `.env` file as environment variables
+
 ## 20250713 (2025-07-13)
 
 * OS: **Rocky Linux 9.6 (Blue Onyx)**
