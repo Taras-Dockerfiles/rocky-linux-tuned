@@ -1,7 +1,7 @@
 FROM rockylinux/rockylinux:9.6
 LABEL MAINTAINER="wujidadi@gmail.com"
 
-ARG vim_tag=v9.1.1538
+ARG vim_tag=v9.1.1566
 ARG nano_great_version=8
 ARG nano_version=8.5
 
@@ -104,7 +104,30 @@ RUN echo '' && \
     git config --global core.pager 'less --raw-control-chars' && \
     echo '' && \
     echo '================================' && \
+    echo 'Creating non-root user ...' && \
+    echo '================================' && \
+    echo '' && \
+    useradd -m -s /bin/zsh -u 1000 rocky && \
+    echo 'rocky:RockyUser' | chpasswd && \
+    usermod -aG wheel rocky && \
+    echo '%wheel ALL=(ALL) NOPASSWD:ALL' > /etc/sudoers.d/rocky && \
+    chmod 0440 /etc/sudoers.d/rocky && \
+    curl -L https://raw.github.com/Wujidadi/Ubuntu-RC/main/home.bashrc -o /home/rocky/.bashrc && \
+    curl -L https://raw.github.com/Wujidadi/Ubuntu-RC/main/home.vimrc -o /home/rocky/.vimrc && \
+    curl -L https://raw.github.com/Wujidadi/Ubuntu-RC/main/home.zshrc -o /home/rocky/.zshrc && \
+    cp /root/.nanorc /home/rocky/.nanorc && \
+    mkdir -p /home/rocky/.oh-my-zsh/cache && \
+    cp -r /root/.oh-my-zsh /home/rocky/.oh-my-zsh && \
+    /bin/bash -c "touch /home/rocky/.oh-my-zsh/cache/{.zsh-update,grep-alias}" && \
+    /bin/bash -c "git config --global core.pager 'less --raw-control-chars'" && \
+    chown -R rocky:rocky /home/rocky && \
+    echo '' && \
+    echo '================================' && \
     echo 'Image building finishes' && \
     echo '================================'
+
+# Switch to non-root user
+USER rocky
+WORKDIR /home/rocky
 
 CMD [ "/bin/zsh", "-l" ]

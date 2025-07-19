@@ -1,5 +1,17 @@
 # Change Log
 
+## 20250720 (2025-07-20)
+
+* OS: **Rocky Linux 9.6 (Blue Onyx)**
+* Main software versions:
+  - **Vim v9.1.1566**
+  - **GNU Nano 8.5**
+* Solve Docker Scout health score problems:
+  - Add non-root user
+  - Add SBOM and Provenance options to the build command and make the command a independent `buildx` script
+* Add independent `test` script for testing the image
+* Make the shared arguments in both `buildx` and `test` scripts environment variables in `.env` file
+
 ## 20250713 (2025-07-13)
 
 * OS: **Rocky Linux 9.6 (Blue Onyx)**
