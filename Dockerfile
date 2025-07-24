@@ -34,7 +34,7 @@ RUN echo '' && \
     dnf install -y epel-release dnf-utils util-linux util-linux-user glibc-common glibc-langpack-en && \
     dnf install -y --allowerasing sudo bash-completion gcc openssl xz \
     net-tools iputils nmap lsof telnet cronie rsyslog expect zip unzip p7zip p7zip-plugins curl wget tmux \
-    tmux zsh ca-certificates less tmux chrony gpg gpgme gnupg2 && \
+    zsh ca-certificates less chrony gpg gpgme gnupg2 && \
     echo '' && \
     echo '================================' && \
     echo 'Installing Development Tools ...' && \
