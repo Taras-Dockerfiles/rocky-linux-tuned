@@ -1,6 +1,8 @@
 #!/bin/bash
 
-source ./.env
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+source "${SCRIPT_DIR}/.env"
 
 # Create testing container
 docker run -d -p 50000:80 -it --name Test $IMAGE:$TAG

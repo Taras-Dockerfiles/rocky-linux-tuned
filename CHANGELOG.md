@@ -1,5 +1,16 @@
 # Change Log
 
+## 20251122 (2025-11-22)
+
+* OS: **Rocky Linux 9.6 (Blue Onyx)**
+* Main software versions:
+  - **Git v2.52.0**
+  - **Vim v9.1.1924**
+  - **GNU Nano 8.7**
+* Installed two Zsh plugins:
+  - **zsh-autosuggestions**
+  - **zsh-syntax-highlighting**
+
 ## 20250831 (2025-08-31)
 
 * OS: **Rocky Linux 9.6 (Blue Onyx)**

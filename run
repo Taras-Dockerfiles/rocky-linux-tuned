@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # Go to the root of this project
 cd ~/Documents/Workspaces/Docker/rocky-tuned
 
