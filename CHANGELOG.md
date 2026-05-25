@@ -1,5 +1,13 @@
 # Change Log
 
+## 20260525 (2026-05-25)
+
+* OS: **Rocky Linux 9.7 (Blue Onyx)**
+* Main software versions:
+  - **Git v2.54.0**
+  - **Vim v9.2.0530**
+  - **GNU Nano 9.0**
+
 ## 20251122 (2025-11-22)
 
 * OS: **Rocky Linux 9.6 (Blue Onyx)**

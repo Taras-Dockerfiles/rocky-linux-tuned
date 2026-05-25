@@ -1,10 +1,10 @@
 FROM rockylinux/rockylinux:9-ubi-init
 LABEL MAINTAINER="wujidadi@gmail.com"
 
-ARG git_version=2.52.0
-ARG vim_version=9.1.1924
-ARG nano_great_version=8
-ARG nano_version=8.7
+ARG git_version=2.54.0
+ARG vim_version=9.2.0530
+ARG nano_great_version=9
+ARG nano_version=9.0
 
 ARG root_pswd
 ARG user_name=rocky
